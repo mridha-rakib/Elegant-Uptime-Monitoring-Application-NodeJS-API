@@ -15,18 +15,18 @@ const data = require("./lib/data");
 const app = {};
 
 // temp
-data.update(
-  "test",
-  "newFile4",
-  { name: "England", language: "English" },
-  (err) => {
-    if (!err) {
-      console.log("Created successfully!");
-    } else {
-      console.log(err);
-    }
-  }
-);
+// data.update(
+//   "test",
+//   "newFile4",
+//   { name: "England", language: "English" },
+//   (err) => {
+//     if (!err) {
+//       console.log("Created successfully!");
+//     } else {
+//       console.log(err);
+//     }
+//   }
+// );
 
 // data.read("test", "newFile4", (err, data) => {
 //   console.log("Hello");

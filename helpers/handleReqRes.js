@@ -14,6 +14,7 @@ const {
   notFoundHandler,
 } = require("../handlers/routeHandlers/notFoundHandler");
 const { type } = require("os");
+const { parseJSON } = require("./utilities");
 
 // modue scaffolding
 const handler = {};
@@ -42,21 +43,26 @@ handler.handleReqRes = (req, res) => {
     ? routes[trimmedPath]
     : notFoundHandler;
 
-  chosenHandler(requestProperties, (statusCode, payload) => {
-    statusCode = typeof statusCode === "number" ? statusCode : 500;
-    payload = typeof payload === "object" ? payload : {};
-    const payloadString = JSON.stringify(payload);
-    res.writeHead(statusCode).end(payloadString);
-  });
-
   req
     .on("data", (buffer) => {
       realData += decoder.write(buffer);
     })
     .on("end", () => {
       realData += decoder.end();
-      console.log(realData);
-      res.end("hello world");
+
+      requestProperties.body = parseJSON(realData);
+
+      chosenHandler(requestProperties, (statusCode, payload) => {
+        statusCode = typeof statusCode === "number" ? statusCode : 500;
+        payload = typeof payload === "object" ? payload : {};
+
+        const payloadString = JSON.stringify(payload);
+
+        // return the final response
+        res.setHeader("Content-Type", "application/json");
+        res.writeHead(statusCode);
+        res.end(payloadString);
+      });
     });
 };
 
